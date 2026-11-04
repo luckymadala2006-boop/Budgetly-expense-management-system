@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budgetly | Budget Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="authPage" class="auth-page">
+    <section class="auth-card">
+      <div class="brand"><span class="brand-mark">B</span> Budgetly</div>
+      <div id="loginPanel">
+        <p class="eyebrow">WELCOME BACK</p>
+        <h1>Take charge of your money.</h1>
+        <p class="subtext">Sign in to see your budget at a glance.</p>
+        <div id="loginAlert" class="alert-box hidden"></div>
+        <form id="loginForm">
+          <label>Email <input id="loginEmail" type="email" placeholder="you@example.com" required /></label>
+          <label>Password <input id="loginPassword" type="password" placeholder="Enter your password" required /></label>
+          <button class="primary-btn" type="submit">Sign in <span>→</span></button>
+        </form>
+        <p class="switch-text">New to Budgetly? <button class="text-btn" data-auth="signup">Create an account</button></p>
+      </div>
+      <div id="signupPanel" class="hidden">
+        <p class="eyebrow">GET STARTED</p>
+        <h1>Create your account.</h1>
+        <p class="subtext">Your financial data stays protected in MongoDB.</p>
+        <div id="signupAlert" class="alert-box hidden"></div>
+        <form id="signupForm">
+          <label>Your name <input id="signupName" type="text" placeholder="Jane Doe" required /></label>
+          <label>Email <input id="signupEmail" type="email" placeholder="you@example.com" required /></label>
+          <label>Password <input id="signupPassword" type="password" placeholder="Choose a password" minlength="4" required /></label>
+          <button class="primary-btn" type="submit">Create account <span>→</span></button>
+        </form>
+        <p class="switch-text">Already have an account? <button class="text-btn" data-auth="login">Sign in</button></p>
+      </div>
+    </section>
+    <aside class="auth-art"><div><p>SMARTER SPENDING</p><h2>Every rupee<br />has a purpose.</h2><span>Track today. Plan tomorrow.</span></div></aside>
+  </main>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">B</span> Budgetly</div>
+      <nav>
+        <button class="nav-link active" data-page="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-link" data-page="transactions"><span>↕</span> Transactions</button>
+        <button class="nav-link" data-page="budgets"><span>◎</span> Budgets</button>
+      </nav>
+      <button id="logoutBtn" class="logout">← Log out</button>
+    </aside>
+    <section class="content">
+      <header><div><p id="today" class="date"></p><h2 id="greeting">Good morning!</h2></div><button class="add-btn" data-open-modal>+ Add transaction</button></header>
+
+      <div id="dashboard" class="page active-page">
+        <div class="summary-grid">
+          <article class="summary-card balance"><p>Total balance</p><strong id="balance">₹0</strong><span id="balanceText">Start adding transactions</span></article>
+          <article class="summary-card"><p>Income</p><strong id="income">₹0</strong><span class="positive">↑ Money received</span></article>
+          <article class="summary-card"><p>Expenses</p><strong id="expense">₹0</strong><span class="negative">↓ Money spent</span></article>
+        </div>
+        <div class="two-column">
+          <section class="panel"><div class="panel-title"><div><h3>Recent transactions</h3><p>Your latest activity</p></div><button class="text-btn" data-page="transactions">View all</button></div><div id="recentTransactions" class="transaction-list"></div></section>
+          <section class="panel spending"><div class="panel-title"><div><h3>Spending by category</h3><p>Where your money goes</p></div></div><div id="categoryBreakdown" class="breakdown"></div></section>
+        </div>
+      </div>
+
+      <div id="transactions" class="page">
+        <div class="page-heading"><div><h2>Transactions</h2><p>View and manage every movement of money.</p></div><button class="add-btn" data-open-modal>+ Add transaction</button></div>
+        <section class="panel"><div class="filters"><select id="typeFilter"><option value="all">All types</option><option value="income">Income</option><option value="expense">Expenses</option></select><select id="categoryFilter"><option value="all">All categories</option></select></div><div id="allTransactions" class="transaction-list full-list"></div></section>
+      </div>
+
+      <div id="budgets" class="page">
+        <div class="page-heading"><div><h2>Monthly budgets</h2><p>Set limits and keep your spending on track.</p></div><button id="addBudgetBtn" class="add-btn">+ Set a budget</button></div>
+        <section id="budgetList" class="budget-grid"></section>
+      </div>
+    </section>
+  </div>
+
+  <div id="transactionModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="close-modal">×</button>
+      <h2>Add transaction</h2>
+      <p>Add income or record an expense.</p>
+      <div id="transactionAlert" class="alert-box hidden"></div>
+      <form id="transactionForm">
+        <div class="type-choice">
+          <label><input type="radio" name="type" value="expense" checked /> Expense</label>
+          <label><input type="radio" name="type" value="income" /> Income</label>
+        </div>
+        <label>Description<input id="transactionName" required placeholder="e.g. Grocery shopping" /></label>
+        <div class="form-row">
+          <label>Amount (₹)<input id="transactionAmount" required type="number" min="1" step="any" placeholder="0" /></label>
+          <label>Category<select id="transactionCategory"></select></label>
+        </div>
+        <label>Date<input id="transactionDate" required type="date" /></label>
+        <button class="primary-btn" type="submit">Save transaction</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="budgetModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="close-modal">×</button>
+      <h2>Set a budget</h2>
+      <p>Choose a monthly spending limit for a category.</p>
+      <div id="budgetAlert" class="alert-box hidden"></div>
+      <form id="budgetForm">
+        <label>Category<select id="budgetCategory"></select></label>
+        <label>Monthly limit (₹)<input id="budgetAmount" required type="number" min="1" step="any" placeholder="0" /></label>
+        <button class="primary-btn" type="submit">Save budget</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
